@@ -7,7 +7,6 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 import net.sourceforge.argparse4j.ArgumentParsers;
-import net.sourceforge.argparse4j.impl.Arguments;
 import net.sourceforge.argparse4j.inf.ArgumentParser;
 import net.sourceforge.argparse4j.inf.ArgumentParserException;
 
@@ -22,11 +21,7 @@ public class Main {
         final DependencyCleaner cleaner = new DependencyCleaner(parsedArgs.get("depdirname").toString(),
             parsedArgs.get("depfilename").toString());
 
-        if ((Boolean) parsedArgs.get("deep")) {
-            Files.walkFileTree(dir, cleaner);
-        } else {
-            cleaner.preVisitDirectory(dir, null);
-        }
+        Files.walkFileTree(dir, cleaner);
     }
 
     public static Map<String, Object> parseArgs(String[] args) throws ArgumentParserException {
@@ -52,13 +47,6 @@ public class Main {
           .help("Input directory for dependency cleaning")
           .required(true)
           .type(String.class);
-
-        argparser
-          .addArgument("--deep")
-          .action(Arguments.storeTrue())
-          .help("Set deep discovery of dependencies")
-          .setDefault(false)
-          .type(Boolean.class);
 
         return argparser.parseArgs(args).getAttrs();
     }
